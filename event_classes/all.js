@@ -1,3 +1,4 @@
+'use strict'
 /**
   @file event schemata
   @copyright fuck off
@@ -9,6 +10,8 @@
   Information about the event is contained within various "about" messages,
   which link back to the original {EventDeclaration}.
  */
+
+const ssbkeys = require('ssb-keys');
 
 const org = 'ryuuko';
 const app = 'the_left';
@@ -78,7 +81,7 @@ function Event(event_meta) {
 
   this.timezone = event_meta.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  event_id = event_meta.event_id;
+  const event_id = event_meta.event_id;
   delete event_meta.event_id;
 
   //these things are mandatory
@@ -116,7 +119,7 @@ function OpeningEvent(event_id, title, event_location, description, event_meta) 
 }
 
 // https://ssbc.github.io/scuttlebutt-protocol-guide/
-function Message(previous, author, sequence, content) {
+function MessageVal(previous, author, sequence, content) {
   return {
     previous,
     author,
@@ -127,20 +130,53 @@ function Message(previous, author, sequence, content) {
   };
 }
 
-const me = "@3P07vY/2X2ErDk9tJPhMgyyJdPGWfnP3CgazkMYc66E=.ed25519";
-const test_Message = Message.bind(null, null, me, 1);
+function Message(message_value_without_sig, keys) {
+  const message_value = ssbkeys.signObj(keys, message_value_without_sig);
+
+  const id = ssbkeys.hash(JSON.stringify(message_value, null, 2)); //TODO encoding?
+
+  return {
+    key: `%${id}`,
+    value: message_value,
+    timestamp: new Date().getTime(),
+  }
+}
+
 
 //const e = new EventMeta(5, 'meme', 
 
 //test
-const fail_EventMeta = () => new EventMeta();
+const test_suite = () => {
+  const fail_EventMeta = () => new EventMeta();
 
-const fail_Event = () => new Event({title: 'meme'});
+  const fail_Event = () => new Event({title: 'meme'});
 
-const fail_OpeningEvent = () => new OpeningEvent();
+  const fail_OpeningEvent = () => new OpeningEvent();
+};
 
-const basic_event = new OpeningEvent(5, 'party', "Jules'", "party");
+const test_feed = () => {
+  const keys = ssbkeys.generate();
+  const me = keys.id;
+  const test_Message = MessageVal.bind(null, null, me, 1);
 
-const basic_message = new test_Message(basic_event);
+  const event_declaration = new EventDeclaration();
 
-console.log(basic_message);
+  const opening_event = test_Message(event_declaration);
+
+  const opening_message = new Message(opening_event, keys);
+
+  const opening_message_id = opening_message.key;
+
+  const basic_event = new OpeningEvent(opening_message_id, 'test gathering', "Jules'", "bazinga");
+
+  const basic_message = new MessageVal(opening_message_id, me, 2, basic_event);
+
+  const message_out = new Message(basic_message, keys);
+  console.log(opening_message);
+  console.log(message_out);
+};
+
+const testing = false;
+if(testing) {
+  test_feed();
+}
