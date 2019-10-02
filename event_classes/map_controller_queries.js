@@ -20,7 +20,7 @@ function Circle(center, radius) {
   };
 }
 
-const SpaceQuery(center, radius) = Circle;
+const SpaceQuery = Circle;
 
 /**
   * defines the temporal range of events we want
