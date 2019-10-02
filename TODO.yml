@@ -1,0 +1,4 @@
+once we've decided on a organization name:
+  - find and replace all instances of 
+  - - const org
+    - const app
