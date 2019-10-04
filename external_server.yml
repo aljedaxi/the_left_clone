@@ -1,0 +1,76 @@
+External server:
+  This method runs the ssb-server as a standalone command-line driven server. The danger in this is that you don't install the right plugin versions, and the server won't necessarily be started with the right config (unless you add it to ~/.ssb/config etc).
+
+  For this reason I wouldn't currently recommend this approach
+
+  Install a standalone ssb-server (your gossip server)
+
+  npm install ssb-server@latest -g
+  sbot server
+
+  # then in another tab (these must be separate commands)
+  sbot plugins.install ssb-about
+  sbot plugins.install ssb-backlinks
+  sbot plugins.install ssb-unread
+  sbot plugins.install ssb-suggest
+  sbot plugins.install ssb-search # for search
+  sbot plugins.install ssb-chess-db # for chess
+  sbot plugins.install ssb-private # for private messages
+  sbot plugins.install ssb-meme # for image search
+
+  # restart sbot server (go back to previous tab and kill it)
+  Restart your sbot, then (optionally) use an invite code. This will give you your first friend, from which point you can find others:
+
+  sbot invite.accept LONG_INVITE_CODE_MAYBE_IN_QUOTES
+
+Development:
+  Key depject modules in Patchbay:
+    Here's a quick high level overview of the depject modules you're going to want to know about:
+
+    app.html.app
+    The top level module which starts the front end js.
+
+    app.sync.initialise
+    A collection of function which are called on app start. Does things like load css into the app, set up custom listeners, set default settings
+
+    app.sync.goTo(location)
+    The function you call when you want to open a new location. location can be a string (like a message or blob id) or an object.
+
+    Note - some locations are normalised before being passed onto the router. Check out router.async.normalise for explicit detail.
+
+    router.sync.router
+    This is the module where you can add routes to the app. This is ultimately reduced along with all other router.sync.router modules into the final router.
+
+    app.html.settings
+    Giving modules here will add settings sections to the settings page (app.page.settings).
+
+  Requiring the core of patchbay:
+    If you don't want the default modules, you can grab the main part of patchbay and pick and choose modules like this:
+
+    const patchcore = require('patchcore')
+    const patchbay = require('patchbay/main')
+    const combine = require('depject')
+    const entry = require('depject/entry')
+    const nest = require('depnest')
+
+    const sockets = combine(
+      require('patchbay-dark-crystal'), // the module(s) you want
+      patchbay,
+      patchcore // required
+    )
+
+    const api = entry(sockets, nest('app.html.app', 'first'))
+    document.body.appendChild(api.app.html.app())
+    You'll need to be running your own sbot and launch this with electro / electron. See index.js to see that
+
+    How to add a new page
+    e.g. to add a 'cats' page to the app:
+
+    Add a file app/page/cats.js which gives app.page.cats
+    Tell the router to send people browsing to location {page: 'cats'} to send them to this page
+    route will look like [location => location.page === 'cats', api.app.page.cats]
+    Note the normaliser will automaticall turn location /cats to {page: 'cats'}
+    Add a link somewhere which will trigger that route:
+    e.g. activateapi.app.sync.goTo('/cats') onclick
+    e.g. add a link <a href='/cats'>Cats!</a> (which will be clicked up by listeners)
+
