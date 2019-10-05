@@ -15,6 +15,7 @@ const ssbkeys = require('ssb-keys');
 
 /**
   @returns content portion of a gathering declaration
+  @class
   */
 function EventDeclaration() {
   const org = 'ryuuko';
@@ -26,6 +27,7 @@ function EventDeclaration() {
 
 /**
   * this is literally just here to describe what {Event} needs
+  @class
   */
 class EventMeta {
   constructor(event_id, title, description, event_location, startDateTime, endDateTime, contributors, hosts, attendees, images, address) {
@@ -59,6 +61,7 @@ class EventMeta {
 }
 
 /**
+  @class
   @description generates the content portion of an gathering
   @returns content portion of a message detailing gathering metadata
   @param {EventMeta} event_meta
@@ -102,6 +105,7 @@ function Event(event_meta) {
 }
 
 /**
+  @class
   @param {string} event_id       
   @param {string} title          
   @param {string} event_location 
@@ -127,6 +131,7 @@ function OpeningEvent(event_id, title, event_location, description, event_meta) 
 
 /**
   // https://ssbc.github.io/scuttlebutt-protocol-guide/
+  @class
   @param {string} author   -- id of the author of the message
   @param {string} previous -- id of the previous message in the feed
   @param {number} sequence -- where this message fits into the message feed
@@ -146,6 +151,7 @@ function MessageVal(previous, author, sequence, content) {
 
 /**
   * signs the value of the message, attaches the key, and timestamps the message
+  @class
   @param {MessageVal} message_value_without_sig
   @param              keys                      -- keys supplied by ssbkeys
   @returns a scuttlebutt message
@@ -163,6 +169,7 @@ function MessageWrapper(message_value_without_sig, keys) {
 }
 
 /**
+  @class
   @param          keys     -- keys supplied ssbkeys
   @param {string} previous -- id of the previous message in the feed
   @param {number} sequence -- where this message fits into the message feed

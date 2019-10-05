@@ -1,6 +1,7 @@
 /**
   @param {number} x
   @param {number} y
+  @class
   */
 function Coords(x, y) {
   return {
@@ -12,6 +13,7 @@ function Coords(x, y) {
 /**
   @param {Coords} center
   @param {number} radius -- the distance from the center
+  @class
   */
 function Circle(center, radius) {
   return {
@@ -26,6 +28,7 @@ const SpaceQuery = Circle;
   * defines the temporal range of events we want
   @param {DateTime} from
   @param {DateTime} to
+  @class
   */
 function TimeQuery(from, to) {
   return {
