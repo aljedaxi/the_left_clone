@@ -38,3 +38,16 @@ function TimeQuery(from, to) {
 }
 
 //TODO Categorizational query
+function CategoryQuery(whoknows) {
+  return {
+    meme: 'dab'
+  };
+}
+
+module.exports = {
+  Coords,
+  Circle,
+  SpaceQuery,
+  TimeQuery,
+  CategoryQuery,
+};
