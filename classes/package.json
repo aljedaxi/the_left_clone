@@ -1,0 +1,26 @@
+{
+  "name": "the_left_classes",
+  "version": "0.0.1",
+  "description": "classes the_left",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/permeate_it_nerds/the_left/the_left.git"
+  },
+  "author": "ryuuko",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://gitlab.com/permeate_it_nerds/the_left/the_left/issues"
+  },
+  "homepage": "https://gitlab.com/permeate_it_nerds/the_left/the_left#readme",
+  "keywords": [
+    "scuttlebutt",
+    "gatherings"
+  ],
+  "dependencies": {
+    "ssb-keys": "^7.2.0"
+  }
+}
