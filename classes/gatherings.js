@@ -244,3 +244,13 @@ if(testing) {
   console.log(test_feed(keys));
   console.log(new_test_feed(keys));
 }
+
+module.exports = {
+  EventDeclaration,
+  EventMeta,
+  Event,
+  OpeningEvent,
+  MessageVal,
+  MessageWrapper,
+  Message,
+};
